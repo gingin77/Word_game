@@ -10,20 +10,32 @@
 //
 // If the user guesses the same letter twice, do not take away a guess. Instead, display a message letting them know they've already guessed that letter and ask them to try again.
 
-const randomWordSession = require(req.session.randomWord)
-const letterGuess = require(req.body.letter_guess)
+// const randomWordSession = require(randomWord)
+// const letterGuess = require(letterGuess)
 
-function compareLetterToWord(letterGuess, wordSpread){
+function compareLetterToWord(letterGuess, theWordArray, resultArray){
+  console.log("The compareLetterToWord function has been initiated. The randomWord is "+ theWordArray + "And the last guessed letter is " + letterGuess);
+  console.log(resultArray);
+  // console.log("");
+  for (let i=0; i<theWordArray.length; i++){
+    console.log(letterGuess);
+    if (letterGuess === theWordArray[i]){
+      resultArray[i] = letterGuess
+      console.log(resultArray);
+      console.log("^^this result array is inside the if");
+    }console.log(resultArray);
+    console.log("^^resultArray inside the loop; outside the if");
+    console.log(theWordArray)
+    console.log("^^theWordArray");
 
+  }
+  console.log("You are on the last line of the compareLetterToWord function");
 }
-
-
-
 
 module.exports = {
   compareLetterToWord: compareLetterToWord
 }
 
-module.exports = {
-  sortCorrectAndWrongLetters: sortCorrectAndWrongLetters
-}
+// module.exports = {
+//   sortCorrectAndWrongLetters: sortCorrectAndWrongLetters
+// }

@@ -7,6 +7,7 @@ const fs = require('fs');
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
+const compare1 = require('./letterCompare.js');
 
 const app = express();
 const port = 3000;
@@ -14,11 +15,12 @@ const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().sp
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
 // const test = "Hi, you've written a variable to your route page."
-let wordSpread = [...randomWord]
+let theWordArray = [...randomWord]
 let alphabet = "abcdefghijklmnopqrstuvwxyz"
 let alphabetArray = alphabet.split('')
 // console.log(alphabet.split(''))
 let letterGuess = ""
+let resultArray = []
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -39,24 +41,34 @@ app.use(session({
 
 app.get('/', function (req,res){
   req.session.randomWord = randomWord;
-  console.log(req.session)
-  console.log("^^ req.session")
   console.log(req.session.randomWord)
   console.log("^^ req.session.randomWord")
   wordLength = req.session.randomWord.length
   console.log(wordLength)
   let string = " _ "
   let resultString = string.repeat(wordLength)
+
   // res.send(resultString)
-  console.log(wordSpread)
-  console.log("^^ wordSpread")
+  console.log(theWordArray)
+  console.log("^^ theWordArray")
+  console.log(resultString)
+  console.log("^^resultString")
+
+  resultArray = [...resultString]
+  console.log(resultArray)
+  console.log("^^resultArray")
 
   res.render('index', {resultString: resultString})
 });
 
 app.post('/', function(req, res){ /*I want to store the letter entered in an array and in the session....
   Before saving an entry, I want to validate whether that entry is actually a letter. Use .isalpha
-   I'll need to define a couple different variables. 1 - the letter just chosen; 2 - all letters guessed; 3 - correct letters; 4 - incorrect letters*/
+   I'll need to define a couple different variables.
+     1 - the letter just chosen;
+     2 - all letters guessed;
+     3 - correct letters;
+     4 - incorrect letters*/
+
    console.log("app.post has been activated");
    let keyInput = req.body.keyInput
    console.log(keyInput)
@@ -64,6 +76,9 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
    if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) ) {
      validKeyInput = true
      console.log("if was " + validKeyInput);
+     letterGuess = req.body.keyInput
+     compare1.compareLetterToWord(letterGuess, theWordArray, resultArray)
+     res.redirect('/')
    } else {
      validKeyInput = false
      console.log("else plus " + validKeyInput + "please submit a valid alphabet key");
@@ -75,7 +90,7 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
   //  req.checkBody("keyInput", "Enter a letter to play!").notEmpty();
 
   // let letterGuess = req.body.letter_guess
-  // compareLetterToWord(letterGuess, wordSpread)
+  // compareLetterToWord(letterGuess, theWordArray)
   // console.log(letterGuess)
   // req.session.letters = letterGuessArray
   // req.session.wrongletters
@@ -103,3 +118,5 @@ app.listen(3000, function () {
 // Saved here in case it may be useful at some point:
 // Rolling
 // Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown.
+
+// A vanilla JS alternative to using validator for alphanumeric control - put resrictions on the
