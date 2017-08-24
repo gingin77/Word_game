@@ -9,10 +9,14 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-let randomWord = words[Math.floor(Math.random() * words.length)];
+const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
 // const test = "Hi, you've written a variable to your route page."
-
+let wordSpread = [...randomWord]
+let alphabet = "abcdefghijklmnopqrstuvwxyz"
+let alphabetArray = alphabet.split('')
+// console.log(alphabet.split(''))
+let letterGuess = ""
 
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
@@ -41,31 +45,26 @@ app.get('/', function (req,res){
   let string = " _ "
   let resultString = string.repeat(wordLength)
   res.send(resultString);
+  console.log(wordSpread)
+  console.log("^^ wordSpread");
 });
 
 app.post('/', function(req,res){
-  
+  let letterGuess = req.body.letter_guess
+  compareLetterToWord(letterGuess, wordSpread)
+  console.log(letterGuess)
+
+
 })
 
 // Store the word the user is trying to guess in a session. - DONE
 //
 // On the page, show the number of letters in the word like so:
 //
-// _ _ _ _ _ _ _ I have something that serves this purpose for now.
+// _ _ _ _ _ _ _ I have something that serves this purpose for now. However, I think once letters are guessed correctly, this method won't work so well....
 //
-// Ask the user to supply one guess (i.e. letter) at a time, using a form. This form should be validated to make sure only 1 letter is sent. This letter can be upper or lower case and it should not matter. If a user enters more than one letter, tell them the input is invalid and let them try again.
-//
-// Let the user know if their guess appears in the computer's word. You will have to store the user's guesses in the session.
-//
-// Display the partially guessed word, as well as letters that have not been guessed. For example, if the word is BOMBARD and the letters guessed are a, b, and d, the screen should display:
-//
-// B _ _ B A _ D
-//
-// A user is allowed 8 guesses. Remind the user of how many guesses they have left after each round. The guesses they have left will be determined by what you have in the session.
-//
-// A user loses a guess only when they guess incorrectly. If they guess a letter that is in the computer's word, they do not lose a guess.
-//
-// If the user guesses the same letter twice, do not take away a guess. Instead, display a message letting them know they've already guessed that letter and ask them to try again.
+// Ask the user to supply one guess (i.e. letter) at a time, using a form. This form should be validated to make sure only 1 letter is sent. This letter can be upper or lower case and it should not matter. If a user enters more than one letter, tell them the input is invalid and let them try again. *** In the post request.
+
 //
 // The game should end when the user constructs the full word or runs out of guesses. If the player runs out of guesses, reveal the word to the user when the game ends.
 //
