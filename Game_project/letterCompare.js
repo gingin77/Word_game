@@ -10,4 +10,20 @@
 //
 // If the user guesses the same letter twice, do not take away a guess. Instead, display a message letting them know they've already guessed that letter and ask them to try again.
 
-const randomWordSession = require(req.session.randomWord);
+const randomWordSession = require(req.session.randomWord)
+const letterGuess = require(req.body.letter_guess)
+
+function compareLetterToWord(letterGuess, wordSpread){
+
+}
+
+
+
+
+module.exports = {
+  compareLetterToWord: compareLetterToWord
+}
+
+module.exports = {
+  sortCorrectAndWrongLetters: sortCorrectAndWrongLetters
+}
