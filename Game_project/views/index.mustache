@@ -4,15 +4,20 @@
   <head>
     <meta charset="utf-8">
     <title>Hangman Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/styles.css"/>
   </head>
   <body>
-      <!-- <span>Display letter blanks here</span> -->
-    <!-- {{#wordBlanks}}<span>{{resultString}}</span>{{/wordBlanks}} wordBlanks isn't defined anywhere yet... -->
-      <span>{{resultString}}</span>
+<!-- <span>Display letter blanks here</span> -->
+<!-- {{#wordBlanks}}<span>{{resultString}}</span>{{/wordBlanks}} wordBlanks isn't defined anywhere yet... -->
+    <div class="form_wrapper">
       <form action="/" method="post">
-      <input type="text" name="keyInput" value="" placeholder="Choose a letter">
-      <button type="submit" name="button">submit</button>
-    </form>
+        <label>Choose a letter</label>
+        <input type="text" name="keyInput" value="">
+        <button type="submit" name="button">submit</button>
+      </form>
+    </div>
+    <span class="blanks_and_letters">{{resultString}}</span>
   </body>
 </html>
 

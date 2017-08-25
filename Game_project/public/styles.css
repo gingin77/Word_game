@@ -1,0 +1,42 @@
+body{
+  font-family: 'Poppins', sans-serif;
+  width: 80%;
+  text-align: center;
+}
+
+.blanks_and_letters{
+  font-size: 14em;
+  padding: 40px;
+  margin-top: 100px;
+  display: inline-block;
+}
+
+form{
+  margin-top: 200px;
+}
+label, input, button{
+  font-size: 6em;
+}
+
+input{
+  width: 100px;
+  border-width: 0px 0px 8px 0px;
+  border-style: double;
+  border-color: black;
+  border-image: none;
+  cursor: help;
+  text-align: center;
+  padding: 5px 30px;
+}
+
+button{
+  margin-left: 40px;
+  padding: 5px 30px;
+  background-color: buttonface;
+  color: ghostwhite;
+  box-sizing: none;
+  border-width: 0px;
+  border-style: solid;
+  border-color: hsl(200, 4%, 43%);
+  border-image: none;
+}

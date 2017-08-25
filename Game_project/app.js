@@ -7,7 +7,8 @@ const fs = require('fs');
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
-const compare1 = require('./letterCompare.js');
+const compare1 = require('./letterCompare.js')
+
 
 const app = express();
 const port = 3000;
@@ -15,30 +16,18 @@ const port = 3000;
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
-// const test = "Hi, you've written a variable to your route page."
 let theWordArray = [...randomWord]
 let alphabet = "abcdefghijklmnopqrstuvwxyz"
 let alphabetArray = alphabet.split('')
-// console.log(alphabet.split(''))
 let letterGuess = ""
 let resultArray = []
 let newResultString = ""
-
-// function getRandomWord(){
-//
-//   req.session.randomWord = randomWord;
-//   console.log(req.session.randomWord)
-//   console.log("^^ req.session.randomWord")
-//   wordLength = req.session.randomWord.length
-//   console.log(wordLength)
-//   let string = " _ "
-//   let resultString = string.repeat(wordLength)
-// }
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
 app.set('views', './views')
 
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(expressValidator())
@@ -72,31 +61,9 @@ app.get('/', function (req,res){
     resultArray = [...resultString]
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join within app.get else")
-    res.render('index', {resultString: resultArray})
+    res.render('index', {resultString: resultArray.join(' ')})
     console.log("end of else option");
-    // return resultArray
   }
-  // console.log(randomWord);
-  // console.log("^^this is randomWord before req.session.random word");
-  // req.session.randomWord = randomWord;
-  // console.log(req.session.randomWord)
-  // console.log("^^ req.session.randomWord")
-  // wordLength = req.session.randomWord.length
-  // console.log(wordLength)
-  // let string = "_"
-  // let resultString = string.repeat(wordLength)
-
-  // res.send(resultString)
-  // console.log(theWordArray)
-  // console.log("^^ theWordArray")
-  // console.log(resultString)
-  // console.log("^^resultString")
-  //
-  // resultArray = [...resultString]
-  // console.log(resultArray.join(' '))
-  // console.log("^^resultArray")
-
-  // res.render('index', {resultString: resultArray})
 });
 
 app.post('/', function(req, res){ /*I want to store the letter entered in an array and in the session....
