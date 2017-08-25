@@ -14,9 +14,11 @@ body{
 form{
   margin-top: 200px;
 }
-label, input, button{
+label, input, button, p{
   font-size: 6em;
 }
+
+
 
 input{
   width: 100px;

@@ -1,6 +1,5 @@
 const express = require('express');
 const mustacheExpress = require('mustache-express');
-// const parseurl = require('parseurl');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const fs = require('fs');
@@ -9,7 +8,6 @@ const validator = require('validator')
 
 const compare1 = require('./letterCompare.js')
 
-
 const app = express();
 const port = 3000;
 
@@ -17,12 +15,16 @@ const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().sp
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
 let theWordArray = [...randomWord]
-let alphabet = "abcdefghijklmnopqrstuvwxyz"
-let alphabetArray = alphabet.split('')
+// let alphabet = "abcdefghijklmnopqrstuvwxyz"
+// let alphabetArray = alphabet.split('')
+let no_match = true
 let letterGuess = ""
 let resultArray = []
 let newResultString = ""
 let letterGuessSess = []
+let maxEightLettersArray = []
+// let guessesLeft = ["guess","guess","guess","guess","guess","guess","guess","guess"]
+let numberGuessesLeft = ""
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -48,13 +50,22 @@ app.get('/', function (req,res){
     visitCount = req.session.views++
     console.log(newResultString);
     console.log("^^newResultString within the app.get if statment");
-    res.render('index', {resultString: resultArray.join(' ')})
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
     console.log("if option");
-
     console.log(req.session)
     console.log("^^ req.session within app.get if")
+    console.log(req.session.letterGuess)
+    console.log("^^ req.session.letterGuess within app.get if")
   }else{
     req.session.views = 1
+    console.log(maxEightLettersArray)
+    // console.log(guessesLeft)
+    req.session.guesses = 8
+    numberGuessesLeft = req.session.guesses
+    console.log("req.session.guesses")
+    console.log(numberGuessesLeft)
+    console.log("^^ maxEightLettersArray, number_of_guesses_left");
+
     console.log(req.session)
     console.log("^^ req.session within app.get else")
     req.session.randomWord = randomWord;
@@ -67,7 +78,7 @@ app.get('/', function (req,res){
     resultArray = [...resultString]
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join within app.get else")
-    res.render('index', {resultString: resultArray.join(' ')})
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
     console.log("end of else option");
   }
 });
@@ -86,15 +97,18 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
    if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) ) {
      validKeyInput = true
      console.log("if was " + validKeyInput);
-     letterGuess = req.body.keyInput
-    //  console.log(letterGuess);
-    //  console.log("^^letterGuess");
-     letterGuessSess.push(letterGuess)
-     req.session.letterGuess = letterGuessSess
-    //  console.log(letterGuessSess)
-    //  console.log("^^letterGuessSess");
-     compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString)
-     console.log( resultArray )
+
+
+         letterGuess = req.body.keyInput
+        //  console.log(letterGuess);
+        //  console.log("^^letterGuess");
+         letterGuessSess.push(letterGuess)
+         req.session.letterGuess = letterGuessSess
+        //  console.log(letterGuessSess)
+        //  console.log("^^letterGuessSess");
+         compare1.compareLetterToWord(no_match, letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft)
+         console.log( resultArray )
+
      res.redirect('/')
    } else {
      validKeyInput = false
