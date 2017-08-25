@@ -14,23 +14,30 @@
 // const letterGuess = require(letterGuess)
 
 function compareLetterToWord(letterGuess, theWordArray, resultArray){
-  console.log("The compareLetterToWord function has been initiated. The randomWord is "+ theWordArray + "And the last guessed letter is " + letterGuess);
-  console.log(resultArray);
+  console.log("The compareLetterToWord function has been initiated. The randomWord is "+ theWordArray + "And the last guessed letter is ");
+  console.log(letterGuess);
+  // console.log(resultArray);
   // console.log("");
   for (let i=0; i<theWordArray.length; i++){
-    console.log(letterGuess);
     if (letterGuess === theWordArray[i]){
       resultArray[i] = letterGuess
-      console.log(resultArray);
-      console.log("^^this result array is inside the if");
-    }console.log(resultArray);
-    console.log("^^resultArray inside the loop; outside the if");
-    console.log(theWordArray)
-    console.log("^^theWordArray");
-
+      // console.log(resultArray);
+      // console.log("^^this result array is inside the if");
+    }
+    // console.log(theWordArray)
+    // console.log("^^theWordArray");
   }
+  console.log(resultArray)
+  console.log("^^ resultArray");
+  console.log(resultArray.join(" "))
+  console.log("^^ resultArray.join with ' ' ");
+  let newResultString = resultArray.join(" ")
+  console.log(newResultString);
+  console.log("^^newResultString");
   console.log("You are on the last line of the compareLetterToWord function");
+  return(resultArray, newResultString)
 }
+
 
 module.exports = {
   compareLetterToWord: compareLetterToWord

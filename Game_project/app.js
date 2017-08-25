@@ -11,6 +11,7 @@ const compare1 = require('./letterCompare.js');
 
 const app = express();
 const port = 3000;
+
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
@@ -21,6 +22,18 @@ let alphabetArray = alphabet.split('')
 // console.log(alphabet.split(''))
 let letterGuess = ""
 let resultArray = []
+let newResultString = ""
+
+// function getRandomWord(){
+//
+//   req.session.randomWord = randomWord;
+//   console.log(req.session.randomWord)
+//   console.log("^^ req.session.randomWord")
+//   wordLength = req.session.randomWord.length
+//   console.log(wordLength)
+//   let string = " _ "
+//   let resultString = string.repeat(wordLength)
+// }
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -39,26 +52,51 @@ app.use(session({
   // cookie: { maxAge: 300000 } << implement a timeout function later....
 }));
 
+
 app.get('/', function (req,res){
-  req.session.randomWord = randomWord;
-  console.log(req.session.randomWord)
-  console.log("^^ req.session.randomWord")
-  wordLength = req.session.randomWord.length
-  console.log(wordLength)
-  let string = " _ "
-  let resultString = string.repeat(wordLength)
+  if (req.session.views){
+    visitCount = req.session.views++
+    console.log(newResultString);
+    console.log("^^newResultString within the app.get if statment");
+    res.render('index', {resultString: resultArray.join(' ')})
+    console.log("if option");
+  }else{
+    req.session.views = 1
+    req.session.randomWord = randomWord;
+    console.log(req.session.randomWord)
+    console.log("^^ req.session.randomWord within app.get else")
+    wordLength = req.session.randomWord.length
+    console.log(wordLength)
+    let string = "_"
+    let resultString = string.repeat(wordLength)
+    resultArray = [...resultString]
+    console.log(resultArray.join(' '))
+    console.log("^^resultArray.join within app.get else")
+    res.render('index', {resultString: resultArray})
+    console.log("end of else option");
+    // return resultArray
+  }
+  // console.log(randomWord);
+  // console.log("^^this is randomWord before req.session.random word");
+  // req.session.randomWord = randomWord;
+  // console.log(req.session.randomWord)
+  // console.log("^^ req.session.randomWord")
+  // wordLength = req.session.randomWord.length
+  // console.log(wordLength)
+  // let string = "_"
+  // let resultString = string.repeat(wordLength)
 
   // res.send(resultString)
-  console.log(theWordArray)
-  console.log("^^ theWordArray")
-  console.log(resultString)
-  console.log("^^resultString")
+  // console.log(theWordArray)
+  // console.log("^^ theWordArray")
+  // console.log(resultString)
+  // console.log("^^resultString")
+  //
+  // resultArray = [...resultString]
+  // console.log(resultArray.join(' '))
+  // console.log("^^resultArray")
 
-  resultArray = [...resultString]
-  console.log(resultArray)
-  console.log("^^resultArray")
-
-  res.render('index', {resultString: resultString})
+  // res.render('index', {resultString: resultArray})
 });
 
 app.post('/', function(req, res){ /*I want to store the letter entered in an array and in the session....
@@ -77,7 +115,10 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
      validKeyInput = true
      console.log("if was " + validKeyInput);
      letterGuess = req.body.keyInput
-     compare1.compareLetterToWord(letterGuess, theWordArray, resultArray)
+     compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString)
+    //  console.log( resultArray.join(" "))
+     console.log( resultArray );
+    //  return newResultString
      res.redirect('/')
    } else {
      validKeyInput = false
@@ -85,16 +126,10 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
     //  res.send("please submit a valid alphabet key")
      res.redirect('/')
    }
-
-
-  //  req.checkBody("keyInput", "Enter a letter to play!").notEmpty();
-
-  // let letterGuess = req.body.letter_guess
-  // compareLetterToWord(letterGuess, theWordArray)
-  // console.log(letterGuess)
-  // req.session.letters = letterGuessArray
-  // req.session.wrongletters
 })
+
+
+
 
 // Store the word the user is trying to guess in a session. - DONE
 //
