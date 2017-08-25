@@ -22,6 +22,7 @@ let alphabetArray = alphabet.split('')
 let letterGuess = ""
 let resultArray = []
 let newResultString = ""
+let letterGuessSess = []
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -49,8 +50,13 @@ app.get('/', function (req,res){
     console.log("^^newResultString within the app.get if statment");
     res.render('index', {resultString: resultArray.join(' ')})
     console.log("if option");
+
+    console.log(req.session)
+    console.log("^^ req.session within app.get if")
   }else{
     req.session.views = 1
+    console.log(req.session)
+    console.log("^^ req.session within app.get else")
     req.session.randomWord = randomWord;
     console.log(req.session.randomWord)
     console.log("^^ req.session.randomWord within app.get else")
@@ -73,7 +79,6 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
      2 - all letters guessed;
      3 - correct letters;
      4 - incorrect letters*/
-
    console.log("app.post has been activated");
    let keyInput = req.body.keyInput
    console.log(keyInput)
@@ -82,10 +87,14 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
      validKeyInput = true
      console.log("if was " + validKeyInput);
      letterGuess = req.body.keyInput
+    //  console.log(letterGuess);
+    //  console.log("^^letterGuess");
+     letterGuessSess.push(letterGuess)
+     req.session.letterGuess = letterGuessSess
+    //  console.log(letterGuessSess)
+    //  console.log("^^letterGuessSess");
      compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString)
-    //  console.log( resultArray.join(" "))
-     console.log( resultArray );
-    //  return newResultString
+     console.log( resultArray )
      res.redirect('/')
    } else {
      validKeyInput = false

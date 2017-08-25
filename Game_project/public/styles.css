@@ -27,6 +27,7 @@ input{
   cursor: help;
   text-align: center;
   padding: 5px 30px;
+  outline: none;
 }
 
 button{
