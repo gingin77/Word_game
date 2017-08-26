@@ -48,38 +48,41 @@ app.use(session({
 app.get('/', function (req,res){
   if (req.session.views){
     visitCount = req.session.views++
-    console.log(newResultString);
-    console.log("^^newResultString within the app.get if statment");
+    console.log(resultArray.join(' '))
+    console.log("^^resultArray.join(' ') within the app.get if statment")
+    numberGuessesLeft = 8-maxEightLettersArray.length
+    console.log(8-maxEightLettersArray.length)
+    console.log("^^ 8-maxEightLettersArray.length ")
     res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
-    console.log("if option");
-    console.log(req.session)
-    console.log("^^ req.session within app.get if")
-    console.log(req.session.letterGuess)
-    console.log("^^ req.session.letterGuess within app.get if")
+    // console.log("if option");
+    // console.log(req.session)
+    // console.log("^^ req.session within app.get if")
+    // console.log(req.session.letterGuess)
+    // console.log("^^ req.session.letterGuess within app.get if")
+
   }else{
     req.session.views = 1
-    console.log(maxEightLettersArray)
     // console.log(guessesLeft)
     req.session.guesses = 8
-    numberGuessesLeft = req.session.guesses
-    console.log("req.session.guesses")
+    req.session.guesses = numberGuessesLeft
     console.log(numberGuessesLeft)
-    console.log("^^ maxEightLettersArray, number_of_guesses_left");
+    // console.log("^^ maxEightLettersArray, number_of_guesses_left")
 
-    console.log(req.session)
-    console.log("^^ req.session within app.get else")
-    req.session.randomWord = randomWord;
+    // console.log(req.session)
+    // console.log("^^ req.session within app.get else")
+    req.session.randomWord = randomWord
     console.log(req.session.randomWord)
-    console.log("^^ req.session.randomWord within app.get else")
+    // console.log("^^ req.session.randomWord within app.get else")
     wordLength = req.session.randomWord.length
-    console.log(wordLength)
+    // console.log(wordLength)
     let string = "_"
     let resultString = string.repeat(wordLength)
     resultArray = [...resultString]
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join within app.get else")
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
-    console.log("end of else option");
+
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: "8"})
+    console.log("end of else option within the app.get function")
   }
 });
 
@@ -90,14 +93,20 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
      2 - all letters guessed;
      3 - correct letters;
      4 - incorrect letters*/
-   console.log("app.post has been activated");
+   console.log("app.post has been activated")
+
+     req.session.guesses = numberGuessesLeft
+     console.log(numberGuessesLeft)
+     console.log("numberGuessesLeft")
+     console.log(req.session.guesses)
+     console.log("^^req.session.guesses")
+
    let keyInput = req.body.keyInput
    console.log(keyInput)
 
    if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) ) {
      validKeyInput = true
      console.log("if was " + validKeyInput);
-
 
          letterGuess = req.body.keyInput
         //  console.log(letterGuess);
@@ -106,7 +115,10 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
          req.session.letterGuess = letterGuessSess
         //  console.log(letterGuessSess)
         //  console.log("^^letterGuessSess");
-         compare1.compareLetterToWord(no_match, letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft)
+         compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft)
+         req.session.guesses = numberGuessesLeft
+         console.log( maxEightLettersArray )
+         console.log(maxEightLettersArray.length);
          console.log( resultArray )
 
      res.redirect('/')

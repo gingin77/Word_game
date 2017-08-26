@@ -1,26 +1,30 @@
-function compareLetterToWord(no_match, letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft){
+function compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft){
   console.log("The letter is "+letterGuess)
-  console.log(theWordArray.indexOf(letterGuess))
-  console.log("^^theWordArray.indexOf(letterGuess)");
+  // console.log(theWordArray.indexOf(letterGuess))
+  // console.log("^^theWordArray.indexOf(letterGuess)");
 
-
-  // if (no_match === true){
     for (let i=0; i<theWordArray.length; i++){
       if (letterGuess === theWordArray[i]){
         resultArray[i] = letterGuess
-        // no_match === false
         }
       }
-      if (theWordArray.indexOf(letterGuess) === -1){
-      console.log("you're inside the 'no_match' part of the compare function");
-      maxEightLettersArray.push(letterGuess)
-      console.log(maxEightLettersArray)
-      console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
-      numberGuessesLeft -= 1
-      console.log(numberGuessesLeft);
+    if (theWordArray.indexOf(letterGuess) === -1){
+    console.log("you're inside the 'no_match' part of the compare function");
+    maxEightLettersArray.push(letterGuess)
+    console.log(maxEightLettersArray)
+    console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
+    numberGuessesLeft = 8 - (maxEightLettersArray.length);
+    console.log(numberGuessesLeft);
 
   }
+  // maxEightLettersArray.push(letterGuess)
+  console.log(maxEightLettersArray)
+  console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
+  // numberGuessesLeft = 8 - (maxEightLettersArray.length);
+  console.log(numberGuessesLeft);
+  
   newResultString = resultArray.join(" ")
+  // req.session.guesses = numberGuessesLeft
   console.log(newResultString)
   console.log("^^newResultString")
   console.log("You are on the last line of the compareLetterToWord function");
