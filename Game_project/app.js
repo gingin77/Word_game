@@ -46,26 +46,31 @@ app.use(session({
 
 
 app.get('/', function (req,res){
-  if (req.session.views){
+  if (req.session.guesses === 1){
+    res.send('<p> GAME OVER</p>')
+  }
+  else if (req.session.views){
     visitCount = req.session.views++
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
     numberGuessesLeft = 8-maxEightLettersArray.length
     console.log(8-maxEightLettersArray.length)
     console.log("^^ 8-maxEightLettersArray.length ")
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
+    req.session.guesses = numberGuessesLeft
+
     // console.log("if option");
-    // console.log(req.session)
-    // console.log("^^ req.session within app.get if")
+    console.log(req.session)
+    console.log("^^ req.session within app.get if")
     // console.log(req.session.letterGuess)
     // console.log("^^ req.session.letterGuess within app.get if")
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
 
   }else{
     req.session.views = 1
     // console.log(guessesLeft)
     req.session.guesses = 8
-    req.session.guesses = numberGuessesLeft
-    console.log(numberGuessesLeft)
+
+    // console.log(numberGuessesLeft)
     // console.log("^^ maxEightLettersArray, number_of_guesses_left")
 
     // console.log(req.session)
