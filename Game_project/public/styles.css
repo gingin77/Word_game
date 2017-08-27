@@ -44,3 +44,7 @@ button{
   border-color: hsl(200, 4%, 43%);
   border-image: none;
 }
+
+.missed{
+  colot: red;
+}

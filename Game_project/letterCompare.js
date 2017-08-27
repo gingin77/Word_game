@@ -1,7 +1,6 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray){
+function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, numberGuessesLeft, winArray){
   console.log("The letter is "+letterGuess)
-  // console.log(theWordArray.indexOf(letterGuess))
-  // console.log("^^theWordArray.indexOf(letterGuess)");
+
 
     for (let i=0; i<theWordArray.length; i++){
       if (letterGuess === theWordArray[i]){
@@ -25,7 +24,7 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, /*newResult
   // numberGuessesLeft = 8 - (maxEightLettersArray.length);
   console.log(numberGuessesLeft);
   console.log("You are on the last line of the compareLetterToWord function");
-  return(resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray)
+  return(resultArray, maxEightLettersArray, numberGuessesLeft, winArray)
 }
 
 module.exports = {

@@ -7,6 +7,7 @@ const expressValidator = require('express-validator')
 const validator = require('validator')
 
 const compare1 = require('./letterCompare.js')
+const gameover = require('./gameoverLoop.js')
 
 const app = express();
 const port = 3000;
@@ -23,6 +24,7 @@ let letterGuessSess = []
 let maxEightLettersArray = []
 let numberGuessesLeft = ""
 let winArray = []
+let duplicate_letter = false
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -45,8 +47,11 @@ app.use(session({
 
 app.get('/', function (req,res){
   if (req.session.guesses === 1){
+    console.log("game over condition has been activated");
+    gameover.gameoverLoop(resultArray, theWordArray)
     req.session.finish = "loose"
-    res.send('<p> GAME OVER</p>')
+    console.log(resultArray + "result Array from the app.get Gameover condition");
+    res.send('<p> resultArray </p>')
   }
   if (req.session.finish === "win") {
     console.log(req.session)
@@ -55,6 +60,7 @@ app.get('/', function (req,res){
   }
   else if (req.session.views){
     visitCount = req.session.views++
+    console.log(duplicate_letter + "from inside the app.get else if");
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
     numberGuessesLeft = 8-maxEightLettersArray.length
@@ -91,56 +97,50 @@ app.get('/', function (req,res){
   }
 });
 
-app.post('/', function(req, res){ /*I want to store the letter entered in an array and in the session....
-  Before saving an entry, I want to validate whether that entry is actually a letter. Use .isalpha
-   I'll need to define a couple different variables.
-     1 - the letter just chosen;
-     2 - all letters guessed;
-     3 - correct letters;
-     4 - incorrect letters*/
-   console.log("app.post has been activated")
+app.post('/', function(req, res){
+    console.log("app.post has been activated")
+    duplicate_letter = false
+    req.session.guesses = numberGuessesLeft
 
-     req.session.guesses = numberGuessesLeft
-     console.log(numberGuessesLeft)
-     console.log("numberGuessesLeft")
-     console.log(req.session.guesses)
-     console.log("^^req.session.guesses")
+    let keyInput = req.body.keyInput
+    console.log(keyInput)
 
-   let keyInput = req.body.keyInput
-   console.log(keyInput)
+      if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1})){
+        duplicate_letter = letterGuessSess.includes(keyInput)
+        if (duplicate_letter === true) {
+         console.log("you've already chosen this letter")
+         duplicate_letter = true
+         console.log(duplicate_letter);
+       }
+      }
 
-   if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) ) {
+   if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) && duplicate_letter === false) {
      validKeyInput = true
-     console.log("if was " + validKeyInput);
+     console.log("the valid was " + validKeyInput)
 
-         letterGuess = req.body.keyInput
-        //  console.log(letterGuess);
-        //  console.log("^^letterGuess");
-         letterGuessSess.push(letterGuess)
-         req.session.letterGuess = letterGuessSess
-        //  console.log(letterGuessSess)
-        //  console.log("^^letterGuessSess");
-         compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray)
-         req.session.guesses = numberGuessesLeft
-         console.log( maxEightLettersArray )
-         console.log(maxEightLettersArray.length);
-         console.log( resultArray )
-
-         if (winArray.length === resultArray.length){
-           // res.send("<p> Your word has 8 letters!</p>")
-           req.session.finish = "win"
-           console.log("^^You win! from the app.post");
-           console.log(req.session.finish)
-          //  res.send('<p>You win!!!!</p>')
+      if (letterGuessSess.indexOf(keyInput) === -1){
+           letterGuess = req.body.keyInput
+           letterGuessSess.push(letterGuess)
+           req.session.letterGuess = letterGuessSess
+           compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, numberGuessesLeft, winArray)
+           req.session.guesses = numberGuessesLeft
          }
 
-     res.redirect('/')
-
+      if (winArray.length === resultArray.length){
+             req.session.finish = "win"
+          }
+      res.redirect('/')
    } else {
-     validKeyInput = false
-     console.log("else plus " + validKeyInput + "please submit a valid alphabet key");
-    //  res.send("please submit a valid alphabet key")
-     res.redirect('/')
+        if (validKeyInput = false){
+          console.log("please submit a valid alphabet key");
+         //  res.send("please submit a valid alphabet key")
+          res.redirect('/')
+        }
+        if (duplicate_letter === true){
+          console.log("The letter has already been guessed once before");
+         //  res.send("please submit a valid alphabet key")
+          res.redirect('/')
+        }
    }
 })
 
