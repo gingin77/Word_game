@@ -15,16 +15,14 @@ const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().sp
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
 let theWordArray = [...randomWord]
-// let alphabet = "abcdefghijklmnopqrstuvwxyz"
-// let alphabetArray = alphabet.split('')
 let no_match = true
 let letterGuess = ""
 let resultArray = []
-let newResultString = ""
+// let newResultString = ""
 let letterGuessSess = []
 let maxEightLettersArray = []
-// let guessesLeft = ["guess","guess","guess","guess","guess","guess","guess","guess"]
 let numberGuessesLeft = ""
+let winArray = []
 
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
@@ -47,7 +45,13 @@ app.use(session({
 
 app.get('/', function (req,res){
   if (req.session.guesses === 1){
+    req.session.finish = "loose"
     res.send('<p> GAME OVER</p>')
+  }
+  if (req.session.finish === "win") {
+    console.log(req.session)
+    console.log("^^You win!")
+    res.send('<p>You win!!!!</p>')
   }
   else if (req.session.views){
     visitCount = req.session.views++
@@ -57,14 +61,10 @@ app.get('/', function (req,res){
     console.log(8-maxEightLettersArray.length)
     console.log("^^ 8-maxEightLettersArray.length ")
     req.session.guesses = numberGuessesLeft
-
-    // console.log("if option");
     console.log(req.session)
     console.log("^^ req.session within app.get if")
-    // console.log(req.session.letterGuess)
-    // console.log("^^ req.session.letterGuess within app.get if")
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft})
 
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft, letters_guessed_already: maxEightLettersArray.join(', ')})
   }else{
     req.session.views = 1
     // console.log(guessesLeft)
@@ -120,13 +120,22 @@ app.post('/', function(req, res){ /*I want to store the letter entered in an arr
          req.session.letterGuess = letterGuessSess
         //  console.log(letterGuessSess)
         //  console.log("^^letterGuessSess");
-         compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft)
+         compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray)
          req.session.guesses = numberGuessesLeft
          console.log( maxEightLettersArray )
          console.log(maxEightLettersArray.length);
          console.log( resultArray )
 
+         if (winArray.length === resultArray.length){
+           // res.send("<p> Your word has 8 letters!</p>")
+           req.session.finish = "win"
+           console.log("^^You win! from the app.post");
+           console.log(req.session.finish)
+          //  res.send('<p>You win!!!!</p>')
+         }
+
      res.redirect('/')
+
    } else {
      validKeyInput = false
      console.log("else plus " + validKeyInput + "please submit a valid alphabet key");

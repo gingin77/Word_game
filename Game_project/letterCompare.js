@@ -1,4 +1,4 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, newResultString, maxEightLettersArray, numberGuessesLeft){
+function compareLetterToWord(letterGuess, theWordArray, resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray){
   console.log("The letter is "+letterGuess)
   // console.log(theWordArray.indexOf(letterGuess))
   // console.log("^^theWordArray.indexOf(letterGuess)");
@@ -6,6 +6,7 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, newResultSt
     for (let i=0; i<theWordArray.length; i++){
       if (letterGuess === theWordArray[i]){
         resultArray[i] = letterGuess
+        winArray.push(theWordArray[i])
         }
       }
     if (theWordArray.indexOf(letterGuess) === -1){
@@ -15,20 +16,16 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, newResultSt
     console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
     numberGuessesLeft = 8 - (maxEightLettersArray.length);
     console.log(numberGuessesLeft);
-
+    console.log(winArray);
+    console.log(winArray.length);
+    console.log("^^winArray plus winArray.length");
   }
-  // maxEightLettersArray.push(letterGuess)
   console.log(maxEightLettersArray)
   console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
   // numberGuessesLeft = 8 - (maxEightLettersArray.length);
   console.log(numberGuessesLeft);
-  
-  newResultString = resultArray.join(" ")
-  // req.session.guesses = numberGuessesLeft
-  console.log(newResultString)
-  console.log("^^newResultString")
   console.log("You are on the last line of the compareLetterToWord function");
-  return(resultArray, newResultString, maxEightLettersArray, numberGuessesLeft)
+  return(resultArray, /*newResultString,*/ maxEightLettersArray, numberGuessesLeft, winArray)
 }
 
 module.exports = {

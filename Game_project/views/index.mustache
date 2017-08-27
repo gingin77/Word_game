@@ -19,6 +19,10 @@
     </div>
     <p class="blanks_and_letters">{{resultString}}</p>
     <p class="lives_left">You have {{number_of_guesses_left}} guesses available</p>
+    <p class="letters_guessed_already">
+    {{#letters_guessed_already}}You've already guessed: {{.}}{{/letters_guessed_already}}
+    {{^letters_guessed_already}}{{/letters_guessed_already}}
+    </p>
   </body>
 </html>
 
