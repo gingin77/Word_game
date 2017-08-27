@@ -56,7 +56,7 @@ app.get('/', function (req,res){
     console.log(resultArray + "result Array from the app.get Gameover condition")
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
-    res.send('<p>' + resultArray.join(' ') + '</p>')
+    res.render('gameover', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
     console.log(theWordArray)
     console.log(resultArray)
   }
@@ -70,9 +70,9 @@ app.get('/', function (req,res){
     console.log(duplicate_letter + "from inside the app.get else if");
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
-    numberGuessesLeft = 8-maxEightLettersArray.length
-    console.log(8-maxEightLettersArray.length)
-    console.log("^^ 8-maxEightLettersArray.length ")
+    numberGuessesLeft = 3-maxEightLettersArray.length
+    console.log(3-maxEightLettersArray.length)
+    console.log("^^ 3-maxEightLettersArray.length ")
     req.session.guesses = numberGuessesLeft
     console.log(req.session)
     console.log("^^ req.session within app.get if")
@@ -81,7 +81,7 @@ app.get('/', function (req,res){
   }else if (req.session.finish !== "loose" || req.session.finish === "win"){
     req.session.views = 1
     // console.log(guessesLeft)
-    req.session.guesses = 8
+    req.session.guesses = 3
     // randomWordcapped =
     function wordCapFunct(){
       for (let i=0; i<words.length; i++){
@@ -110,7 +110,7 @@ app.get('/', function (req,res){
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join within app.get else")
 
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: "8"})
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: "3"})
     console.log("end of else option within the app.get function")
   }
 });

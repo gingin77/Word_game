@@ -10,18 +10,18 @@
   <body>
 <!-- <span>Display letter blanks here</span> -->
 <!-- {{#wordBlanks}}<span>{{resultString}}</span>{{/wordBlanks}} wordBlanks isn't defined anywhere yet... -->
-    <div class="form_wrapper">
+    <!-- <div class="form_wrapper">
       <form action="/" method="post">
         <label>Choose a letter</label>
         <input type="text" name="keyInput" value="">
         <button type="submit" name="button">submit</button>
       </form>
-    </div>
-    <p class="blanks_and_letters">{{resultString}}
+    </div> -->
+    <p class="final_display">{{{resultString}}}
     </p>
-    <p class="lives_left">You have {{number_of_guesses_left}} guesses available</p>
+    <p class="lives_left">Thanks for playing!</p>
     <p class="letters_guessed_already">
-    {{#letters_guessed_already}}You've already guessed: {{.}}{{/letters_guessed_already}}
+    {{#letters_guessed_already}}Letters you guessed incorrectly: {{.}}{{/letters_guessed_already}}
     {{^letters_guessed_already}}{{/letters_guessed_already}}
     </p>
   </body>
