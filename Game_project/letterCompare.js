@@ -13,7 +13,7 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLet
     maxEightLettersArray.push(letterGuess)
     console.log(maxEightLettersArray)
     console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
-    numberGuessesLeft = 8 - (maxEightLettersArray.length);
+    numberGuessesLeft = 5 - (maxEightLettersArray.length);
     console.log(numberGuessesLeft);
     console.log(winArray);
     console.log(winArray.length);

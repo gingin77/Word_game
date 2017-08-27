@@ -12,10 +12,17 @@ const gameover = require('./gameoverLoop.js')
 const app = express();
 const port = 3000;
 
-const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n")
+
 const randomWord = words[Math.floor(Math.random() * words.length)];
 let wordLength = ""
 let theWordArray = [...randomWord]
+
+const randomWordcappedSingle = randomWordcapped[Math.floor(Math.random() * randomWordcapped.length)]
+let randomWordcappedSingleLength = ""
+let cappedWordArray = [...randomWordcappedSingle]
+let randomWordcapped = []
+
 let no_match = true
 let letterGuess = ""
 let resultArray = []
@@ -47,11 +54,15 @@ app.use(session({
 
 app.get('/', function (req,res){
   if (req.session.guesses === 1){
+    console.log(theWordArray)
+    console.log(resultArray)
     console.log("game over condition has been activated");
-    gameover.gameoverLoop(resultArray, theWordArray)
+    gameover.gameoverLoop(theWordArray, resultArray)
     req.session.finish = "loose"
     console.log(resultArray + "result Array from the app.get Gameover condition");
     res.send('<p> resultArray </p>')
+    console.log(theWordArray)
+    console.log(resultArray)
   }
   if (req.session.finish === "win") {
     console.log(req.session)
@@ -63,9 +74,9 @@ app.get('/', function (req,res){
     console.log(duplicate_letter + "from inside the app.get else if");
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
-    numberGuessesLeft = 8-maxEightLettersArray.length
-    console.log(8-maxEightLettersArray.length)
-    console.log("^^ 8-maxEightLettersArray.length ")
+    numberGuessesLeft = 5-maxEightLettersArray.length
+    console.log(5-maxEightLettersArray.length)
+    console.log("^^ 5-maxEightLettersArray.length ")
     req.session.guesses = numberGuessesLeft
     console.log(req.session)
     console.log("^^ req.session within app.get if")
@@ -74,17 +85,28 @@ app.get('/', function (req,res){
   }else{
     req.session.views = 1
     // console.log(guessesLeft)
-    req.session.guesses = 8
+    req.session.guesses = 3
+    // randomWordcapped =
+    function wordCapFunct(){
+      for (let i=0; i<words.length; i++){
+        if (words[i].length < 6){
+          randomWordcapped.push(words[i])
+        }
+      }
+    }
+    wordCapFunct(words)
+    console.log((randomWordcapped.length), (randomWordcapped[2000]));
+
 
     // console.log(numberGuessesLeft)
     // console.log("^^ maxEightLettersArray, number_of_guesses_left")
 
     // console.log(req.session)
     // console.log("^^ req.session within app.get else")
-    req.session.randomWord = randomWord
-    console.log(req.session.randomWord)
+    req.session.randomWord = randomWordcappedSingle
+    console.log(req.session.randomWordcappedSingle)
     // console.log("^^ req.session.randomWord within app.get else")
-    wordLength = req.session.randomWord.length
+    wordLength = req.session.randomWordcappedSingle.length
     // console.log(wordLength)
     let string = "_"
     let resultString = string.repeat(wordLength)
