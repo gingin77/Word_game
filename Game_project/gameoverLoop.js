@@ -3,7 +3,7 @@ function gameoverLoop(theWordArray, resultArray){
   console.log(resultArray)
   for (let i=0; i < theWordArray.length; i++) {
     if (resultArray[i] !== theWordArray[i]){
-      let missedLetter = resultArray[i]
+      let missedLetter = theWordArray[i]
       console.log(missedLetter)
       console.log(typeof missedLetter)
       resultArray[i] = `<span class="missed">${missedLetter}</span>`
@@ -19,7 +19,10 @@ function gameoverLoop(theWordArray, resultArray){
       }
     }
   }
+  console.log(resultArray)
+  console.log("^^resultArray from inside the gameoverLoopFunction");
   return resultArray
+
 }
 
 
