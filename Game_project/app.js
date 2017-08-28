@@ -2,21 +2,23 @@ const express = require('express');
 const mustacheExpress = require('mustache-express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const fs = require('fs');
+// const fs = require('fs');
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
 const compare1 = require('./letterCompare.js')
 const gameover = require('./gameoverLoop.js')
+const randomWordMod = require('./randomWord.js')
 
 const app = express();
 const port = 3000;
 
-const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-const randomWord = words[Math.floor(Math.random() * words.length)];
+// const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+// let randomWord = words[Math.floor(Math.random() * words.length)]
 let randomWordcapped = []
-let wordLength = ""
-let theWordArray = [...randomWord]
+// let wordLength = ""
+let randomWord = ""
+let theWordArray = []
 let no_match = true
 let letterGuess = ""
 let resultArray = []
@@ -78,20 +80,29 @@ app.get('/', function (req,res){
     console.log("^^ req.session within app.get if")
 
     res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft, letters_guessed_already: maxEightLettersArray.join(', ')})
+
   }else if (req.session.finish !== "loose" || req.session.finish === "win"){
     req.session.views = 1
     // console.log(guessesLeft)
     req.session.guesses = 3
+    randomWordMod.randomWordSelector(randomWord, theWordArray, resultArray)
+    console.log(randomWord)
+    req.session.randomWord = randomWord
+    console.log(resultArray)
+    console.log(theWordArray)
+
+    console.log(req.session)
+
     // randomWordcapped =
-    function wordCapFunct(){
-      for (let i=0; i<words.length; i++){
-        if (words[i].length < 6){
-          randomWordcapped.push(words[i])
-        }
-      }
-    }
-    wordCapFunct(words)
-    console.log((randomWordcapped.length), (randomWordcapped[2000]));
+    // function wordCapFunct(){
+    //   for (let i=0; i<words.length; i++){
+    //     if (words[i].length < 6){
+    //       randomWordcapped.push(words[i])
+    //     }
+    //   }
+    // }
+    // wordCapFunct(words)
+    // console.log((randomWordcapped.length), (randomWordcapped[2000]));
 
 
     // console.log(numberGuessesLeft)
@@ -99,21 +110,23 @@ app.get('/', function (req,res){
 
     // console.log(req.session)
     // console.log("^^ req.session within app.get else")
-    req.session.randomWord = randomWord
-    console.log(req.session.randomWord)
+    // req.session.randomWord = randomWord
+    // console.log(req.session.randomWord)
     // console.log("^^ req.session.randomWord within app.get else")
-    wordLength = req.session.randomWord.length
+    // wordLength = req.session.randomWord.length
     // console.log(wordLength)
-    let string = "_"
-    let resultString = string.repeat(wordLength)
-    resultArray = [...resultString]
-    console.log(resultArray.join(' '))
-    console.log("^^resultArray.join within app.get else")
+    // let string = "_"
+    // let resultString = string.repeat(wordLength)
+    // resultArray = [...resultString]
+    // console.log(resultArray.join(' '))
+    // console.log("^^resultArray.join within app.get else")
 
     res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: "3"})
     console.log("end of else option within the app.get function")
   }
 });
+
+
 
 app.post('/', function(req, res){
     console.log("app.post has been activated")
@@ -160,6 +173,23 @@ app.post('/', function(req, res){
           res.redirect('/')
         }
    }
+})
+
+app.get('/newgame', function(req,res){
+  res.send('<p>Was the session destroyed??</p>')
+  console.log(req.session)
+})
+
+app.post('/newgame', function(req,res){
+  console.log(req.body.restart)
+  // console.log(typeof req.body.restart)
+  console.log("the post function for restart was triggered")
+  req.session.destroy()
+//   req.session.destroy(function(err) {
+//   // cannot access session here
+// })
+  console.log(req.session)
+  res.redirect('/')
 })
 
 

@@ -24,6 +24,10 @@
     {{#letters_guessed_already}}Letters you guessed incorrectly: {{.}}{{/letters_guessed_already}}
     {{^letters_guessed_already}}{{/letters_guessed_already}}
     </p>
+    <form action="/newgame" method="post">
+      <!-- <input type="text" name="restart" value=""> -->
+      <button type="submit" name="restart">Start Over</button>
+    </form>
   </body>
 </html>
 
