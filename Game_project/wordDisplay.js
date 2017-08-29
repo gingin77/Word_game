@@ -1,3 +1,5 @@
+// This module is not being used by the app.js code right now
+
 function resultDisplay(req, res){
   req.session.randomWord.length = wordLength
   let string = "_"
@@ -15,6 +17,19 @@ module.exports = {
 
 
 
+
+// randomWordcapped =
+// function wordCapFunct(){
+//   for (let i=0; i<words.length; i++){
+//     if (words[i].length < 6){
+//       randomWordcapped.push(words[i])
+//     }
+//   }
+// }
+// wordCapFunct(words)
+// console.log((randomWordcapped.length), (randomWordcapped[2000]));
+// console.log(numberGuessesLeft)
+// console.log("^^ maxEightLettersArray, number_of_guesses_left")
 
 // function wordCapFunct(){
 //   for (let i=0; i<words.length; i++){

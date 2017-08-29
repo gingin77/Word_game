@@ -18,7 +18,6 @@ let letterGuess = ''
 let resultArray = []
 let letterGuessSess = []
 let maxEightLettersArray = []
-// let numberGuessesLeft = ""
 let winArray = []
 let duplicate_letter = false
 
@@ -37,21 +36,20 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-
 app.get('/', function (req,res){
-  if (req.session.guesses === 1){
+  if (req.session.finish === "loose"){
     console.log(theWordArray)
     console.log(resultArray)
     console.log("game over condition has been activated");
     gameover.gameoverLoop(theWordArray, resultArray)
-    req.session.finish = "loose"
+    // req.session.finish = "loose"
     res.render('gameover', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
     console.log(req.session)
     console.log(theWordArray)
   }
   if (req.session.finish === "win") {
     console.log(req.session)
-    console.log("^^You win!")
+    // console.log("^^You win!")
     res.render('win', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
   }
   else if (req.session.views && req.session.finish !== "loose" || req.session.finish === "win"){
@@ -69,6 +67,7 @@ app.get('/', function (req,res){
 
     res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: req.session.guesses, letters_guessed_already: maxEightLettersArray.join(', ')})
 
+// the conditional below is what needs to happen at the start of every new game.
   }else if (req.session.finish !== "loose" || req.session.finish === "win"){
     req.session.views = 1
     req.session.guesses = 3 /*assigned for the first time here*/
@@ -83,18 +82,6 @@ app.get('/', function (req,res){
     theWordArray = [...req.session.randomWord]
     console.log(req.session.resultDisplay.join(' '))
     console.log("^^req.session.resultDisplay.join at the end of the wordDisplay function")
-    // randomWordcapped =
-    // function wordCapFunct(){
-    //   for (let i=0; i<words.length; i++){
-    //     if (words[i].length < 6){
-    //       randomWordcapped.push(words[i])
-    //     }
-    //   }
-    // }
-    // wordCapFunct(words)
-    // console.log((randomWordcapped.length), (randomWordcapped[2000]));
-    // console.log(numberGuessesLeft)
-    // console.log("^^ maxEightLettersArray, number_of_guesses_left")
     res.render('index', {resultString: req.session.resultDisplay.join(' '), number_of_guesses_left: req.session.guesses})
     console.log("end of else option within the app.get function")
   }
@@ -128,13 +115,16 @@ app.post('/', function(req, res){
            compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
           //  req.session.guesses = numberGuessesLeft
          }
-
       if (winArray.length === resultArray.length){
              req.session.finish = "win"
           }
+      if (maxEightLettersArray.length === 3){
+        req.session.finish = "loose"
+        console.log(req.session.finish)
+          }
       res.redirect('/')
    } else {
-        if (validKeyInput = false){
+        if (validKeyInput === false){
           console.log("please submit a valid alphabet key");
          //  res.send("please submit a valid alphabet key")
           res.redirect('/')
@@ -147,10 +137,10 @@ app.post('/', function(req, res){
    }
 })
 
-app.get('/newgame', function(req,res){
-  res.send('<p>Was the session destroyed??</p>')
-  console.log(req.session)
-})
+// app.get('/newgame', function(req,res){
+//   res.send('<p>Was the session destroyed??</p>')
+//   console.log(req.session)
+// })
 
 app.post('/newgame', function(req,res){
   console.log(req.body.restart)
@@ -160,9 +150,6 @@ app.post('/newgame', function(req,res){
   winArray=[]
   letterGuessSess=[]
   req.session.destroy()
-//   req.session.destroy(function(err) {
-//   // cannot access session here
-// })
   console.log(req.session)
   res.redirect('/')
 })
