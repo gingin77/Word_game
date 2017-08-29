@@ -83,15 +83,15 @@ app.get('/', function (req,res){
 
   }else if (req.session.finish !== "loose" || req.session.finish === "win"){
     req.session.views = 1
-    // console.log(guessesLeft)
     req.session.guesses = 3
-    randomWordMod.randomWordSelector(randomWord, theWordArray, resultArray)
-    console.log(randomWord)
-    req.session.randomWord = randomWord
-    console.log(resultArray)
-    console.log(theWordArray)
 
-    console.log(req.session)
+    // randomWordMod.randomWordSelector(randomWord, theWordArray, resultArray)
+    // console.log(randomWord)
+    req.session.randomWord = randomWordMod.randomWordSelector()
+    // console.log(resultArray)
+    // console.log(theWordArray)
+    console.log(req.session);
+    console.log(req.session.randomWord)
 
     // randomWordcapped =
     // function wordCapFunct(){
@@ -121,7 +121,7 @@ app.get('/', function (req,res){
     // console.log(resultArray.join(' '))
     // console.log("^^resultArray.join within app.get else")
 
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: "3"})
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: req.session.guesses})
     console.log("end of else option within the app.get function")
   }
 });

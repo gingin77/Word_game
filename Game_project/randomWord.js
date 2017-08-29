@@ -4,24 +4,28 @@ const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().sp
 // let randomWordcapped = []
 // let wordLength = ""
 
-function randomWordSelector(randomWord, theWordArray, resultArray){
-  randomWord = words[Math.floor(Math.random() * words.length)]
-  console.log(randomWord)
-  theWordArray = [...randomWord]
-
-  let wordLength = randomWord.length
-  let string = "_"
-  let resultString = string.repeat(wordLength)
-  resultArray = [...resultString]
-  console.log(resultArray.join(' '))
-  console.log("^^resultArray.join at the end of the randomWordSelector function")
-  return(randomWord, theWordArray, resultArray)
+function randomWordSelector(req, res){
+  let randomWord = words[Math.floor(Math.random() * words.length)]
+  return(randomWord)
 }
 
-module.exports ={
+module.exports = {
   randomWordSelector: randomWordSelector
 }
 
+// theWordArray
+//
+// resultArray
+
+// console.log(req.session.randomWord)
+// theWordArray = [...randomWord]
+//
+// let wordLength = randomWord.length
+// let string = "_"
+// let resultString = string.repeat(wordLength)
+// resultArray = [...resultString]
+// console.log(resultArray.join(' '))
+// console.log("^^resultArray.join at the end of the randomWordSelector function")
 
 
 // function wordCapFunct(){
