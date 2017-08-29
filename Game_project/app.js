@@ -1,31 +1,24 @@
-const express = require('express');
-const mustacheExpress = require('mustache-express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-// const fs = require('fs');
+const express = require('express')
+const mustacheExpress = require('mustache-express')
+const bodyParser = require('body-parser')
+const session = require('express-session')
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
 const compare1 = require('./letterCompare.js')
 const gameover = require('./gameoverLoop.js')
 const randomWordMod = require('./randomWord.js')
+// const resultDisplay = require('./wordDisplay.js')
 
-const app = express();
+const app = express()
 const port = 3000;
 
-// const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-// let randomWord = words[Math.floor(Math.random() * words.length)]
-let randomWordcapped = []
-// let wordLength = ""
-let randomWord = ""
 let theWordArray = []
-let no_match = true
-let letterGuess = ""
+let letterGuess = ''
 let resultArray = []
-// let newResultString = ""
 let letterGuessSess = []
 let maxEightLettersArray = []
-let numberGuessesLeft = ""
+// let numberGuessesLeft = ""
 let winArray = []
 let duplicate_letter = false
 
@@ -42,9 +35,6 @@ app.use(session({
   secret: 'keyboard pitbull',
   resave: false,
   saveUninitialized: true,
-  // word: "magic",
-  // << putting a word key:value pair here doesn't store the word. Usee req.session.word... or something similar
-  // cookie: { maxAge: 300000 } << implement a timeout function later....
 }));
 
 
@@ -55,12 +45,9 @@ app.get('/', function (req,res){
     console.log("game over condition has been activated");
     gameover.gameoverLoop(theWordArray, resultArray)
     req.session.finish = "loose"
-    console.log(resultArray + "result Array from the app.get Gameover condition")
-    console.log(resultArray.join(' '))
-    console.log("^^resultArray.join(' ') within the app.get if statment")
     res.render('gameover', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
+    console.log(req.session)
     console.log(theWordArray)
-    console.log(resultArray)
   }
   if (req.session.finish === "win") {
     console.log(req.session)
@@ -72,27 +59,30 @@ app.get('/', function (req,res){
     console.log(duplicate_letter + "from inside the app.get else if");
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
-    numberGuessesLeft = 3-maxEightLettersArray.length
+    req.session.guesses = 3-maxEightLettersArray.length
+    // numberGuessesLeft = 3-maxEightLettersArray.length
     console.log(3-maxEightLettersArray.length)
     console.log("^^ 3-maxEightLettersArray.length ")
-    req.session.guesses = numberGuessesLeft
+    // req.session.guesses = numberGuessesLeft
     console.log(req.session)
     console.log("^^ req.session within app.get if")
 
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: numberGuessesLeft, letters_guessed_already: maxEightLettersArray.join(', ')})
+    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: req.session.guesses, letters_guessed_already: maxEightLettersArray.join(', ')})
 
   }else if (req.session.finish !== "loose" || req.session.finish === "win"){
     req.session.views = 1
-    req.session.guesses = 3
-
-    // randomWordMod.randomWordSelector(randomWord, theWordArray, resultArray)
-    // console.log(randomWord)
+    req.session.guesses = 3 /*assigned for the first time here*/
     req.session.randomWord = randomWordMod.randomWordSelector()
-    // console.log(resultArray)
-    // console.log(theWordArray)
-    console.log(req.session);
+    console.log(req.session)
     console.log(req.session.randomWord)
-
+    console.log(req.session.randomWord.length);
+    console.log(typeof req.session.randomWord.length)
+    let string = "_"
+    let resultString = string.repeat(req.session.randomWord.length)
+    resultArray = req.session.resultDisplay = [...resultString]
+    theWordArray = [...req.session.randomWord]
+    console.log(req.session.resultDisplay.join(' '))
+    console.log("^^req.session.resultDisplay.join at the end of the wordDisplay function")
     // randomWordcapped =
     // function wordCapFunct(){
     //   for (let i=0; i<words.length; i++){
@@ -103,35 +93,17 @@ app.get('/', function (req,res){
     // }
     // wordCapFunct(words)
     // console.log((randomWordcapped.length), (randomWordcapped[2000]));
-
-
     // console.log(numberGuessesLeft)
     // console.log("^^ maxEightLettersArray, number_of_guesses_left")
-
-    // console.log(req.session)
-    // console.log("^^ req.session within app.get else")
-    // req.session.randomWord = randomWord
-    // console.log(req.session.randomWord)
-    // console.log("^^ req.session.randomWord within app.get else")
-    // wordLength = req.session.randomWord.length
-    // console.log(wordLength)
-    // let string = "_"
-    // let resultString = string.repeat(wordLength)
-    // resultArray = [...resultString]
-    // console.log(resultArray.join(' '))
-    // console.log("^^resultArray.join within app.get else")
-
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: req.session.guesses})
+    res.render('index', {resultString: req.session.resultDisplay.join(' '), number_of_guesses_left: req.session.guesses})
     console.log("end of else option within the app.get function")
   }
 });
 
-
-
 app.post('/', function(req, res){
     console.log("app.post has been activated")
     duplicate_letter = false
-    req.session.guesses = numberGuessesLeft
+    // req.session.guesses = numberGuessesLeft
 
     let keyInput = req.body.keyInput
     console.log(keyInput)
@@ -153,8 +125,8 @@ app.post('/', function(req, res){
            letterGuess = req.body.keyInput
            letterGuessSess.push(letterGuess)
            req.session.letterGuess = letterGuessSess
-           compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, numberGuessesLeft, winArray)
-           req.session.guesses = numberGuessesLeft
+           compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
+          //  req.session.guesses = numberGuessesLeft
          }
 
       if (winArray.length === resultArray.length){
@@ -184,6 +156,9 @@ app.post('/newgame', function(req,res){
   console.log(req.body.restart)
   // console.log(typeof req.body.restart)
   console.log("the post function for restart was triggered")
+  maxEightLettersArray=[]
+  winArray=[]
+  letterGuessSess=[]
   req.session.destroy()
 //   req.session.destroy(function(err) {
 //   // cannot access session here

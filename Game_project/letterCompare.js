@@ -1,6 +1,10 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, numberGuessesLeft, winArray){
+function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray){
   console.log("The letter is "+letterGuess)
-
+  console.log(theWordArray);
+  console.log(resultArray);
+  console.log(maxEightLettersArray);/*It is good for this to be empty at the start*/
+  // console.log(numberGuessesLeft)/*This should be max at start and go down*/
+  console.log(winArray);/*This should be empty at the start*/
 
     for (let i=0; i<theWordArray.length; i++){
       if (letterGuess === theWordArray[i]){
@@ -13,8 +17,8 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLet
     maxEightLettersArray.push(letterGuess)
     console.log(maxEightLettersArray)
     console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
-    numberGuessesLeft = 8 - (maxEightLettersArray.length);
-    console.log(numberGuessesLeft);
+    // numberGuessesLeft = 8 - (maxEightLettersArray.length);
+    // console.log(numberGuessesLeft);
     console.log(winArray);
     console.log(winArray.length);
     console.log("^^winArray plus winArray.length");
@@ -22,9 +26,9 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLet
   console.log(maxEightLettersArray)
   console.log("^^maxEightLettersArray" + (maxEightLettersArray.length));
   // numberGuessesLeft = 8 - (maxEightLettersArray.length);
-  console.log(numberGuessesLeft);
+  // console.log(numberGuessesLeft);
   console.log("You are on the last line of the compareLetterToWord function");
-  return(resultArray, maxEightLettersArray, numberGuessesLeft, winArray)
+  return(resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray)
 }
 
 module.exports = {
