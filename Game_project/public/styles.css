@@ -2,9 +2,11 @@ body{
   font-family: 'Poppins', sans-serif;
   width: 80%;
   text-align: center;
+  background-color: #dadeea
 }
 
 .blanks_and_letters{
+  color: #031547;
   font-size: 4em;
   padding: 40px;
   margin-top: 40px;
@@ -13,10 +15,12 @@ body{
 
 form{
   margin-top: 100px;
+  color: #031547;
 }
 
 label, input, button, p{
   font-size: 2em;
+  color: #031547;
 }
 
 input{
@@ -25,19 +29,26 @@ input{
   width: 60px;
   border-width: 0px 0px 5px 0px;
   border-style: solid;
-  border-color: black;
+  border-color: #031547;;
   border-image: none;
   cursor: help;
   text-align: center;
   padding: 0px 0px 0px 0px;
   outline: none;
+  background-color: #dadeea;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #dadeea inset;
 }
 
 button{
+  background-color: #0a2d76;
+  color: #dadeea;
   margin-left: 10px;
   padding: 5px 30px;
-  background-color: buttonface;
-  color: ghostwhite;
+  /*background-color: buttonface;
+  color: ghostwhite;*/
   box-sizing: none;
   border-width: 0px;
   border-style: solid;
@@ -46,5 +57,9 @@ button{
 }
 
 .missed{
-  color: red;
+  color: #e7771a;
+}
+
+.correct{
+  color: #031547;
 }
