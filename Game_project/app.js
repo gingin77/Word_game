@@ -52,7 +52,7 @@ app.get('/', function (req,res){
   if (req.session.finish === "win") {
     console.log(req.session)
     console.log("^^You win!")
-    res.send('<p>You win!!!!</p>')
+    res.render('win', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
   }
   else if (req.session.views && req.session.finish !== "loose" || req.session.finish === "win"){
     visitCount = req.session.views++
