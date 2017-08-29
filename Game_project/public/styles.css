@@ -65,3 +65,7 @@ button{
 .correct{
   color: #031547;
 }
+
+.errorMessage{
+  color: #e7771a;
+}

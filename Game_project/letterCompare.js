@@ -1,18 +1,18 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray){
-  console.log("The letter is "+letterGuess)
+function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray) {
+  console.log("The letter is " + letterGuess)
   console.log(theWordArray);
   console.log(resultArray);
-  console.log(maxEightLettersArray);/*It is good for this to be empty at the start*/
+  console.log(maxEightLettersArray); /*It is good for this to be empty at the start*/
   // console.log(numberGuessesLeft)/*This should be max at start and go down*/
-  console.log(winArray);/*This should be empty at the start*/
+  console.log(winArray); /*This should be empty at the start*/
 
-    for (let i=0; i<theWordArray.length; i++){
-      if (letterGuess === theWordArray[i]){
-        resultArray[i] = letterGuess
-        winArray.push(theWordArray[i])
-        }
-      }
-    if (theWordArray.indexOf(letterGuess) === -1){
+  for (let i = 0; i < theWordArray.length; i++) {
+    if (letterGuess === theWordArray[i]) {
+      resultArray[i] = letterGuess
+      winArray.push(theWordArray[i])
+    }
+  }
+  if (theWordArray.indexOf(letterGuess) === -1) {
     console.log("you're inside the 'no_match' part of the compare function");
     maxEightLettersArray.push(letterGuess)
     console.log(maxEightLettersArray)
@@ -28,7 +28,7 @@ function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLet
   // numberGuessesLeft = 8 - (maxEightLettersArray.length);
   // console.log(numberGuessesLeft);
   console.log("You are on the last line of the compareLetterToWord function");
-  return(resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray)
+  return (resultArray, maxEightLettersArray, /*numberGuessesLeft,*/ winArray)
 }
 
 module.exports = {

@@ -1,29 +1,39 @@
 <!-- button type needs to be "submit" -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hangman Game</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="/styles.css"/>
-  </head>
-  <body>
-<!-- <span>Display letter blanks here</span> -->
-<!-- {{#wordBlanks}}<span>{{resultString}}</span>{{/wordBlanks}} wordBlanks isn't defined anywhere yet... -->
-    <div class="form_wrapper">
-      <form action="/" method="post">
-        <label>Choose a letter and guess your word</label>
-        <input type="text" name="keyInput" value="" autofocus>
-        <button type="submit" name="button">submit</button>
-      </form>
-    </div>
-    <p class="blanks_and_letters">{{resultString}}</p>
-    <p class="lives_left">You have {{number_of_guesses_left}} guesses available</p>
-    <p class="letters_guessed_already">
-    {{#letters_guessed_already}}You've already guessed: {{.}}{{/letters_guessed_already}}
-    {{^letters_guessed_already}}{{/letters_guessed_already}}
+
+<head>
+  <meta charset="utf-8">
+  <title>Hangman Game</title>
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/styles.css" />
+</head>
+
+<body>
+
+  {{#errorMessage}}
+    <p class="errorMessage">
+      Please enter a single letter that has not already been submitted.
     </p>
-  </body>
+  {{/errorMessage}}
+
+  <div class="form_wrapper">
+    <form action="/" method="post">
+      <label>Choose a letter and guess your word</label>
+      <input type="text" name="keyInput" value="" autofocus>
+      <button type="submit" name="button">submit</button>
+    </form>
+  </div>
+  <p class="blanks_and_letters">{{resultString}}</p>
+  <p class="lives_left">You have {{number_of_guesses_left}} guesses available</p>
+  <p class="letters_guessed_already">
+    {{#letters_guessed_already}}
+    You've already guessed: {{.}}
+    {{/letters_guessed_already}}
+    {{^letters_guessed_already}}{{/letters_guessed_already}}
+  </p>
+</body>
+
 </html>
 
 

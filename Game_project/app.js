@@ -11,7 +11,22 @@ const randomWordMod = require('./randomWord.js')
 // const resultDisplay = require('./wordDisplay.js')
 
 const app = express()
-const port = 3000;
+app.engine('mustache', mustacheExpress())
+app.set('view engine', 'mustache')
+app.set('views', './views')
+
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
+app.use(expressValidator())
+
+app.use(session({
+  secret: 'keyboard pitbull',
+  resave: false,
+  saveUninitialized: true,
+}))
 
 let theWordArray = []
 let letterGuess = ''
@@ -19,58 +34,58 @@ let resultArray = []
 let letterGuessSess = []
 let maxEightLettersArray = []
 let winArray = []
-let duplicate_letter = false
+let duplicateLetter = false
+let letterError = false
 
-app.engine('mustache', mustacheExpress())
-app.set('view engine', 'mustache')
-app.set('views', './views')
-
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(expressValidator())
-
-app.use(session({
-  secret: 'keyboard pitbull',
-  resave: false,
-  saveUninitialized: true,
-}));
-
-app.get('/', function (req,res){
-  if (req.session.finish === "loose"){
+app.get('/', function(req, res) {
+  if (req.session.finish === "loose") {
     console.log(theWordArray)
     console.log(resultArray)
     console.log("game over condition has been activated");
     gameover.gameoverLoop(theWordArray, resultArray)
     // req.session.finish = "loose"
-    res.render('gameover', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
+    res.render('gameover', {
+      resultString: resultArray.join(' '),
+      letters_guessed_already: maxEightLettersArray.join(', ')
+    })
     console.log(req.session)
     console.log(theWordArray)
   }
   if (req.session.finish === "win") {
     console.log(req.session)
     // console.log("^^You win!")
-    res.render('win', {resultString: resultArray.join(' '), letters_guessed_already: maxEightLettersArray.join(', ')})
-  }
-  else if (req.session.views && req.session.finish !== "loose" || req.session.finish === "win"){
-    visitCount = req.session.views++
-    console.log(duplicate_letter + "from inside the app.get else if");
+    res.render('win', {
+      resultString: resultArray.join(' '),
+      letters_guessed_already: maxEightLettersArray.join(', ')
+    })
+// the conditional below is what happens after all guesses through out the game before win or loose gets set.
+  } else if (req.session.views && req.session.finish !== "loose" || req.session.finish === "win") {
+    visitCount = req.session.views++ /*this adds to the view count on the session*/
+    console.log(duplicateLetter + " duplicate letter from inside the app.get else if, this should be false if the letter is NOT a duplicate");
     console.log(resultArray.join(' '))
     console.log("^^resultArray.join(' ') within the app.get if statment")
-    req.session.guesses = 3-maxEightLettersArray.length
-    // numberGuessesLeft = 3-maxEightLettersArray.length
-    console.log(3-maxEightLettersArray.length)
-    console.log("^^ 3-maxEightLettersArray.length ")
-    // req.session.guesses = numberGuessesLeft
+
+// The line below reduces the number of guesses each time the array.length goes up.
+    req.session.guesses = 8 - maxEightLettersArray.length
+    console.log(8 - maxEightLettersArray.length)
+    console.log("^^ 8-maxEightLettersArray.length ")
+
+
     console.log(req.session)
     console.log("^^ req.session within app.get if")
 
-    res.render('index', {resultString: resultArray.join(' '), number_of_guesses_left: req.session.guesses, letters_guessed_already: maxEightLettersArray.join(', ')})
+    res.render('index', {
+      resultString: resultArray.join(' '),
+      // see the end of the app.post function to see how the errors are set up
+      errorMessage: letterError, /*if letterError is true, I want for a message should print*/
+      number_of_guesses_left: req.session.guesses,
+      letters_guessed_already: maxEightLettersArray.join(', ')
+    })
 
-// the conditional below is what needs to happen at the start of every new game.
-  }else if (req.session.finish !== "loose" || req.session.finish === "win"){
+    // the conditional below is what needs to happen at the start of every new game.
+  } else if (req.session.finish !== "loose" || req.session.finish === "win") {
     req.session.views = 1
-    req.session.guesses = 3 /*assigned for the first time here*/
+    req.session.guesses = 8 /*assigned for the first time here*/
     req.session.randomWord = randomWordMod.randomWordSelector()
     console.log(req.session)
     console.log(req.session.randomWord)
@@ -82,59 +97,72 @@ app.get('/', function (req,res){
     theWordArray = [...req.session.randomWord]
     console.log(req.session.resultDisplay.join(' '))
     console.log("^^req.session.resultDisplay.join at the end of the wordDisplay function")
-    res.render('index', {resultString: req.session.resultDisplay.join(' '), number_of_guesses_left: req.session.guesses})
+    console.log(letterError);
+    console.log("^^ letterError boolean value");
+    res.render('index', {
+      resultString: req.session.resultDisplay.join(' '),
+      number_of_guesses_left: req.session.guesses
+    })
     console.log("end of else option within the app.get function")
   }
-});
+})
 
-app.post('/', function(req, res){
-    console.log("app.post has been activated")
-    duplicate_letter = false
-    // req.session.guesses = numberGuessesLeft
+app.post('/', function(req, res) {
+  console.log("app.post has been activated")
+  duplicateLetter = false
+  letterError = false
+  // req.session.guesses = numberGuessesLeft
 
-    let keyInput = req.body.keyInput
-    console.log(keyInput)
+  let keyInput = req.body.keyInput
+  console.log(keyInput)
 
-      if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1})){
-        duplicate_letter = letterGuessSess.includes(keyInput)
-        if (duplicate_letter === true) {
-         console.log("you've already chosen this letter")
-         duplicate_letter = true
-         console.log(duplicate_letter);
-       }
-      }
+  //First the keyInput needs to be validated as an alpha key and a single input.
+  if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min: 1, max: 1})){
+      // If the keyInput is valid, the keyInput is used to querry the letterGuessSess array.
+    duplicateLetter = letterGuessSess.includes(keyInput)
+    console.log(duplicateLetter)
+    console.log("^^ value of duplicateLetter boolean after the letterGuessSess querry")
 
-   if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min:1, max: 1}) && duplicate_letter === false) {
-     validKeyInput = true
-     console.log("the valid was " + validKeyInput)
+        if (duplicateLetter === true) {
+          console.log("you've already chosen this letter")
+          // duplicateLetter = true
+          // console.log(duplicateLetter);
+        }
+  }
 
-      if (letterGuessSess.indexOf(keyInput) === -1){
-           letterGuess = req.body.keyInput
-           letterGuessSess.push(letterGuess)
-           req.session.letterGuess = letterGuessSess
-           compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
-          //  req.session.guesses = numberGuessesLeft
-         }
-      if (winArray.length === resultArray.length){
-             req.session.finish = "win"
-          }
-      if (maxEightLettersArray.length === 3){
-        req.session.finish = "loose"
-        console.log(req.session.finish)
-          }
+  if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min: 1, max: 1}) && duplicateLetter === false) {
+    validKeyInput = true
+    console.log("the validKeyInput was " + validKeyInput)
+
+    if (letterGuessSess.indexOf(keyInput) === -1) {
+      letterGuess = req.body.keyInput
+      letterGuessSess.push(letterGuess)
+      req.session.letterGuess = letterGuessSess
+      compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
+  //  req.session.guesses = numberGuessesLeft
+    }
+    if (winArray.length === resultArray.length) {
+      req.session.finish = "win"
+      console.log(req.session.finish)
+    }
+    if (maxEightLettersArray.length === 3) {
+      req.session.finish = "loose"
+      console.log(req.session.finish)
+    }
+    res.redirect('/')
+// here is where the keyInput messages need to send a message to the user...
+  } else {
+    if (validKeyInput === false || duplicateLetter === true) {
+      letterError = true
+      //  res.send("please submit a valid alphabet key")
       res.redirect('/')
-   } else {
-        if (validKeyInput === false){
-          console.log("please submit a valid alphabet key");
-         //  res.send("please submit a valid alphabet key")
-          res.redirect('/')
-        }
-        if (duplicate_letter === true){
-          console.log("The letter has already been guessed once before");
-         //  res.send("please submit a valid alphabet key")
-          res.redirect('/')
-        }
-   }
+    }
+    // if (duplicateLetter === true) {
+    //   console.log("The letter has already been guessed once before");
+    //   //  res.send("please submit a valid alphabet key")
+    //   res.redirect('/')
+    // }
+  }
 })
 
 // app.get('/newgame', function(req,res){
@@ -142,19 +170,21 @@ app.post('/', function(req, res){
 //   console.log(req.session)
 // })
 
-app.post('/newgame', function(req,res){
+app.post('/newgame', function(req, res) {
   console.log(req.body.restart)
   // console.log(typeof req.body.restart)
   console.log("the post function for restart was triggered")
-  maxEightLettersArray=[]
-  winArray=[]
-  letterGuessSess=[]
+  maxEightLettersArray = []
+  winArray = []
+  letterGuessSess = []
   req.session.destroy()
   console.log(req.session)
   res.redirect('/')
 })
 
-
+app.listen(3000, function() {
+  console.log('Successfully started express application!');
+})
 
 
 // Store the word the user is trying to guess in a session. - DONE
@@ -171,9 +201,7 @@ app.post('/newgame', function(req,res){
 // When a game ends, ask the user if they want to play again. The game begins again if they reply positively.
 
 
-app.listen(3000, function () {
-  console.log('Successfully started express application!');
-})
+
 
 
 // Saved here in case it may be useful at some point:
