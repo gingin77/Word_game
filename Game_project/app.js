@@ -87,18 +87,20 @@ app.get('/', function(req, res) {
     req.session.views = 1
     req.session.guesses = 8 /*assigned for the first time here*/
     req.session.randomWord = randomWordMod.randomWordSelector()
-    console.log(req.session)
-    console.log(req.session.randomWord)
+
     console.log(req.session.randomWord.length);
     console.log(typeof req.session.randomWord.length)
+
     let string = "_"
     let resultString = string.repeat(req.session.randomWord.length)
     resultArray = req.session.resultDisplay = [...resultString]
     theWordArray = [...req.session.randomWord]
+
     console.log(req.session.resultDisplay.join(' '))
     console.log("^^req.session.resultDisplay.join at the end of the wordDisplay function")
     console.log(letterError);
     console.log("^^ letterError boolean value");
+
     res.render('index', {
       resultString: req.session.resultDisplay.join(' '),
       number_of_guesses_left: req.session.guesses
@@ -108,60 +110,38 @@ app.get('/', function(req, res) {
 })
 
 app.post('/', function(req, res) {
-  console.log("app.post has been activated")
   duplicateLetter = false
   letterError = false
-  // req.session.guesses = numberGuessesLeft
 
   let keyInput = req.body.keyInput
-  console.log(keyInput)
 
-  //First the keyInput needs to be validated as an alpha key and a single input.
   if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min: 1, max: 1})){
-      // If the keyInput is valid, the keyInput is used to querry the letterGuessSess array.
     duplicateLetter = letterGuessSess.includes(keyInput)
-    console.log(duplicateLetter)
-    console.log("^^ value of duplicateLetter boolean after the letterGuessSess querry")
+    if (duplicateLetter === false) {
+      validKeyInput = true
 
-        if (duplicateLetter === true) {
-          console.log("you've already chosen this letter")
-          // duplicateLetter = true
-          // console.log(duplicateLetter);
-        }
-  }
-
-  if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {min: 1, max: 1}) && duplicateLetter === false) {
-    validKeyInput = true
-    console.log("the validKeyInput was " + validKeyInput)
-
-    if (letterGuessSess.indexOf(keyInput) === -1) {
-      letterGuess = req.body.keyInput
-      letterGuessSess.push(letterGuess)
-      req.session.letterGuess = letterGuessSess
-      compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
-  //  req.session.guesses = numberGuessesLeft
-    }
-    if (winArray.length === resultArray.length) {
-      req.session.finish = "win"
-      console.log(req.session.finish)
-    }
-    if (maxEightLettersArray.length === 3) {
-      req.session.finish = "loose"
-      console.log(req.session.finish)
-    }
-    res.redirect('/')
-// here is where the keyInput messages need to send a message to the user...
-  } else {
-    if (validKeyInput === false || duplicateLetter === true) {
-      letterError = true
-      //  res.send("please submit a valid alphabet key")
+      if (letterGuessSess.indexOf(keyInput) === -1) {
+        letterGuess = req.body.keyInput
+        letterGuessSess.push(letterGuess)
+        req.session.letterGuess = letterGuessSess
+        compare1.compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
+      }
+      if (winArray.length === resultArray.length) {
+        req.session.finish = "win"
+      }
+      if (maxEightLettersArray.length === 8) {
+        req.session.finish = "loose"
+      }
       res.redirect('/')
+
+  // here is where the keyInput messages need to send a message to the user...
+    } else {
+      if (validKeyInput === false || duplicateLetter === true) {
+        letterError = true
+        //  res.send("please submit a valid alphabet key")
+        res.redirect('/')
+      }
     }
-    // if (duplicateLetter === true) {
-    //   console.log("The letter has already been guessed once before");
-    //   //  res.send("please submit a valid alphabet key")
-    //   res.redirect('/')
-    // }
   }
 })
 
@@ -209,3 +189,10 @@ app.listen(3000, function() {
 // Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown.
 
 // A vanilla JS alternative to using validator for alphanumeric control - put resrictions on the
+
+// let word = "hypocrite"
+// let url = `http://www.dictionaryapi.com/api/v1/references/collegiate/xml/${word}?key=05444020-9a80-470a-9797-d288c4d81606`
+//
+// // fetch(url).then(definition) {
+// //   console.log(definition.entry_id);
+// // }
