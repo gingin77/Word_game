@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const expressValidator = require('express-validator')
 const validator = require('validator')
+const request = require('request')
 
 const compare1 = require('./letterCompare.js')
 const gameover = require('./gameoverLoop.js')
@@ -26,6 +27,7 @@ app.use(session({
   saveUninitialized: true
 }))
 
+let randomWord = ''
 let theWordArray = []
 let letterGuess = ''
 let resultArray = []
