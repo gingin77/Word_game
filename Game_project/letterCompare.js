@@ -1,15 +1,16 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, maxEightLettersArray, winArray)
+function compareLetterToWord(letterGuess, theWordArray, resultArray, loseArray, winArray)
 {
   for (let i = 0; i < theWordArray.length; i++) {
     if (letterGuess === theWordArray[i]) {
+      let nomatch = false
       resultArray[i] = letterGuess
       winArray.push(theWordArray[i])
     }
   }
   if (theWordArray.indexOf(letterGuess) === -1) {
-    maxEightLettersArray.push(letterGuess)
+    loseArray.push(letterGuess)
   }
-  return (resultArray, maxEightLettersArray, winArray)
+  return (resultArray, loseArray, winArray)
 }
 
 module.exports = {
