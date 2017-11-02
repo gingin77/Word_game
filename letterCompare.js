@@ -1,8 +1,7 @@
-function compareLetterToWord(letterGuess, theWordArray, resultArray, loseArray, winArray)
-{
+function compareLetterToWord (letterGuess, theWordArray, resultArray, loseArray, winArray) {
   for (let i = 0; i < theWordArray.length; i++) {
     if (letterGuess === theWordArray[i]) {
-      let nomatch = false
+      // let nomatch = false
       resultArray[i] = letterGuess
       winArray.push(theWordArray[i])
     }

@@ -1,9 +1,9 @@
 const fs = require('fs')
-const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n")
+const words = fs.readFileSync('/usr/share/dict/words', 'utf-8').toLowerCase().split('\n')
 
-function randomWordSelector(){
+function randomWordSelector () {
   let randomWord = words[Math.floor(Math.random() * words.length)]
-  return(randomWord)
+  return (randomWord)
 }
 
 module.exports = {
