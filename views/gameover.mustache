@@ -1,4 +1,3 @@
-<!-- button type needs to be "submit" -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,28 +7,17 @@
     <link rel="stylesheet" type="text/css" href="/styles.css"/>
   </head>
   <body>
-<!-- <span>Display letter blanks here</span> -->
 <!-- {{#wordBlanks}}<span>{{resultString}}</span>{{/wordBlanks}} wordBlanks isn't defined anywhere yet... -->
-    <!-- <div class="form_wrapper">
-      <form action="/" method="post">
-        <label>Choose a letter</label>
-        <input type="text" name="keyInput" value="">
-        <button type="submit" name="button">submit</button>
-      </form>
-    </div> -->
     <p class="final_display">{{{resultString}}}
     </p>
-    <p class="lives_left">Thanks for playing!</p>
+    <p class="lives_left">Thanks for playing!
+    </p>
     <p class="letters_guessed_already">
     {{#letters_guessed_already}}Letters you guessed incorrectly: {{.}}{{/letters_guessed_already}}
     {{^letters_guessed_already}}{{/letters_guessed_already}}
     </p>
     <form action="/newgame" method="post">
-      <!-- <input type="text" name="restart" value=""> -->
       <button type="submit" name="restart">Would you like to play again?</button>
     </form>
   </body>
 </html>
-
-
-<!-- maxlength="1" -->

@@ -1,9 +1,8 @@
-<!-- button type needs to be "submit" -->
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hangman Game</title>
+    <title>Word Game</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="/styles.css"/>
   </head>
@@ -15,11 +14,7 @@
       {{^letters_guessed_already}}{{/letters_guessed_already}}
     </p>
     <form action="/newgame" method="post">
-      <!-- <input type="text" name="restart" value=""> -->
       <button type="submit" name="restart">Would you like to play again?</button>
     </form>
   </body>
 </html>
-
-
-<!-- maxlength="1" -->
