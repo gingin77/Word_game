@@ -2,7 +2,7 @@
 
 body{
   font-family: 'Poppins', sans-serif;
-  width: 80%;
+  margin: 0;
   text-align: center;
   background-color: #dadeea
 }
@@ -48,15 +48,10 @@ input:-webkit-autofill {
 button{
   background-color: #0a2d76;
   color: #dadeea;
-  margin-left: 10px;
   padding: 5px 30px;
-  /*background-color: buttonface;
-  color: ghostwhite;*/
   box-sizing: none;
   border-width: 0px;
-  border-style: solid;
-  border-color: hsl(200, 4%, 43%);
-  border-image: none;
+  border-radius: 10px;
 }
 
 .missed{
