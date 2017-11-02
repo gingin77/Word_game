@@ -1,7 +1,8 @@
 const express = require('express')
 const mustacheExpress = require('mustache-express')
 const bodyParser = require('body-parser')
-const session = require('express-session')
+// const session = require('express-session')
+const cookieSession = require('cookie-session')
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
@@ -20,10 +21,13 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 app.use(expressValidator())
-app.use(session({
-  secret: 'keyboard pitbull',
-  resave: false,
-  saveUninitialized: true
+app.use(cookieSession({
+  name: 'session',
+  keys: ['keyboard pitbull'],
+  // secret: 'keyboard pitbull',
+  // resave: false,
+  // saveUninitialized: true,
+  maxAge: 24 * 60 * 60 * 1000
 }))
 
 let randomWord = ''
@@ -114,7 +118,7 @@ app.post('/', function (req, res) {
 })
 
 app.post('/newgame', function (req, res) {
-  req.session.destroy()
+  req.session = null
   letterGuessSess = []
   loseArray = []
   winArray = []
