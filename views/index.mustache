@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="/styles.css" />
   </head>
-  <body>
+  <body onload="noBlankFix();">
     {{#errorMessage}}
       <p class="errorMessage">
         Please enter a single letter that has not already been submitted.
@@ -27,5 +27,6 @@
       {{/letters_guessed_already}}
       {{^letters_guessed_already}}{{/letters_guessed_already}}
     </p>
+    <script type="text/javascript" src="/main.js"></script>
   </body>
 </html>

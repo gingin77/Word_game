@@ -24,9 +24,6 @@ app.use(expressValidator())
 app.use(cookieSession({
   name: 'session',
   keys: ['keyboard pitbull'],
-  // secret: 'keyboard pitbull',
-  // resave: false,
-  // saveUninitialized: true,
   maxAge: 24 * 60 * 60 * 1000
 }))
 
@@ -40,8 +37,7 @@ let winArray = []
 let duplicateLetter = false
 let letterError = false
 
-app.get('/', function(req, res) {
-  // req.session = null
+app.get('/', function (req, res) {
   if (req.session.finish === 'lose') {
     console.log('lose')
     gameover.gameoverLoop(theWordArray, resultArray)
@@ -58,6 +54,7 @@ app.get('/', function(req, res) {
     })
   } else if (req.session.finish !== 'lose' || req.session.finish === 'win') {
     if (req.session.views) {
+      // req.session = null
       console.log('views')
       req.session.views++
         req.session.guesses = 8 - loseArray.length
