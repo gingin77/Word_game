@@ -40,8 +40,10 @@ let winArray = []
 let duplicateLetter = false
 let letterError = false
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
+  // req.session = null
   if (req.session.finish === 'lose') {
+    console.log('lose')
     gameover.gameoverLoop(theWordArray, resultArray)
     res.render('gameover', {
       resultString: resultArray.join(' '),
@@ -49,14 +51,16 @@ app.get('/', function (req, res) {
     })
   }
   if (req.session.finish === 'win') {
+    console.log('win')
     res.render('win', {
       resultString: resultArray.join(' '),
       letters_guessed_already: loseArray.join(', ')
     })
   } else if (req.session.finish !== 'lose' || req.session.finish === 'win') {
     if (req.session.views) {
+      console.log('views')
       req.session.views++
-      req.session.guesses = 8 - loseArray.length
+        req.session.guesses = 8 - loseArray.length
       res.render('index', {
         resultString: resultArray.join(' '),
         errorMessage: letterError,
@@ -64,9 +68,11 @@ app.get('/', function (req, res) {
         letters_guessed_already: loseArray.join(', ')
       })
     } else {
+      console.log('no views')
       req.session.views = 1
       req.session.guesses = 8
-      req.session.randomWord = randomWordMod.randomWordSelector()
+      req.session.randomWord = randomWordMod.randomWordSelector().replace(/"/g,"")
+      console.log(req.session.randomWord)
       let string = '_'
       let resultString = string.repeat(req.session.randomWord.length)
       resultArray = req.session.resultDisplay = [...resultString]
@@ -80,16 +86,16 @@ app.get('/', function (req, res) {
   }
 })
 
-app.post('/', function (req, res) {
+app.post('/', function(req, res) {
   duplicateLetter = false
   letterError = false
 
   let keyInput = req.body.keyInput
 
   if (validator.isAlpha(req.body.keyInput) && validator.isLength(req.body.keyInput, {
-    min: 1,
-    max: 1
-  })) {
+      min: 1,
+      max: 1
+    })) {
     duplicateLetter = letterGuessSess.includes(keyInput)
 
     if (duplicateLetter === false) {
@@ -117,7 +123,8 @@ app.post('/', function (req, res) {
   }
 })
 
-app.post('/newgame', function (req, res) {
+app.post('/newgame', function(req, res) {
+  console.log(req.session)
   req.session = null
   letterGuessSess = []
   loseArray = []
@@ -125,10 +132,6 @@ app.post('/newgame', function (req, res) {
   res.redirect('/')
 })
 
-// app.listen(3000, function () {
-//   console.log('Successfully started express application!')
-// })
-
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3000, function() {
   console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env)
 })
