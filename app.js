@@ -1,14 +1,13 @@
 const express = require('express')
 const mustacheExpress = require('mustache-express')
 const bodyParser = require('body-parser')
-// const session = require('express-session')
 const cookieSession = require('cookie-session')
 const expressValidator = require('express-validator')
 const validator = require('validator')
 
 const compare1 = require('./letterCompare.js')
 const gameover = require('./gameoverLoop.js')
-const randomWordMod = require('./randomWord.js')
+const randomWord = require('./randomWord.js')
 
 const app = express()
 app.engine('mustache', mustacheExpress())
@@ -27,7 +26,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000
 }))
 
-let randomWord = ''
+// let randomWord = ''
 let theWordArray = []
 let letterGuess = ''
 let resultArray = []
@@ -37,7 +36,7 @@ let winArray = []
 let duplicateLetter = false
 let letterError = false
 
-app.get('/', function (req, res) {
+app.get('/', randomWord.randomWordSelector, function (req, res) {
   if (req.session.finish === 'lose') {
     console.log('lose')
     gameover.gameoverLoop(theWordArray, resultArray)
@@ -54,7 +53,6 @@ app.get('/', function (req, res) {
     })
   } else if (req.session.finish !== 'lose' || req.session.finish === 'win') {
     if (req.session.views) {
-      // req.session = null
       console.log('views')
       req.session.views++
         req.session.guesses = 8 - loseArray.length
@@ -65,11 +63,10 @@ app.get('/', function (req, res) {
         letters_guessed_already: loseArray.join(', ')
       })
     } else {
-      console.log('no views')
       req.session.views = 1
       req.session.guesses = 8
-      req.session.randomWord = randomWordMod.randomWordSelector().replace(/"/g,"")
-      console.log(req.session.randomWord)
+      // req.session.randomWord = randomWord.randomWordSelector().replace(/"/g,"")
+      console.log(req.session.randomWord + 'from app.js')
       let string = '_'
       let resultString = string.repeat(req.session.randomWord.length)
       resultArray = req.session.resultDisplay = [...resultString]
